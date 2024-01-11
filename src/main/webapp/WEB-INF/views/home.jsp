@@ -8,5 +8,8 @@
 </head>
 <body>
 	<h2>메롱메롱 테스트</h2>
+	<a href="login">로그인하기</a>
+	<a>게시판가기</a>
+	
 </body>
 </html>
