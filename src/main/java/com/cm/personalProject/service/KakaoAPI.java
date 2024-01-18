@@ -8,9 +8,11 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.cm.personalProject.domain.OauthId;
 import com.cm.personalProject.entity.User;
 import com.cm.personalProject.repository.UserRepository;
 import com.google.gson.JsonElement;
@@ -85,15 +87,14 @@ public class KakaoAPI {
 	} // getAccessToken()
 
 	// getUserInfo
-	public HashMap<String, Object> getUserInfo(String access_token) {
-		// 요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap 타입으로 선
-		HashMap<String, Object> userInfo = new HashMap<>();
+	public String getUserInfo(String access_token) {
 
 		String reqUrl = "https://kapi.kakao.com/v2/user/me";
+		
 		try {
 			URL url = new URL(reqUrl);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
+			conn.setRequestMethod("POST");
 
 			// 요청에 필요한 Header에 포함될 내용
 			conn.setRequestProperty("Authorization", "Bearer " + access_token);
@@ -125,29 +126,30 @@ public class KakaoAPI {
 			JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
 			String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-			String profile_image = properties.getAsJsonObject().get("profile_image").getAsString();
 			String email = kakao_account.getAsJsonObject().get("email").getAsString();
+			String token_id = element.getAsJsonObject().get("id").getAsString();
+			
+			Optional<User> opt_user = repository.findById(new OauthId("kakao", token_id));
 
-			userInfo.put("nickname", nickname);
-			userInfo.put("email", email);
-			userInfo.put("profile_image", profile_image);
-
-			User user = new User();
-			user.setUseremail(email);
-			user.setUsername(nickname);
-			user.setOauthtype("kakao");
-			user.setOauthtoken("00000");
-			user.setUserphone("01033356803");
-			user.setUserbirthday("19960627");
-			System.out.println("user!!!!!!!" + user);
-			repository.save(user);
-
+			if (!opt_user.isPresent()) {
+				User user = new User();
+				user.setUseremail(email);
+				user.setUsername(nickname);
+				user.setOauthtype("kakao");
+				user.setOauthtoken(token_id);
+				System.out.println("user!!!!!!!" + user);
+				repository.save(user);
+			} else {
+				return "fail";
+			}
+			
 			br.close();
+			return "success";
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return "fail";
 		}
-		return userInfo;
 	}
 
 }

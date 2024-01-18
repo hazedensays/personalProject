@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,12 +32,13 @@ public class LoginController {
 		String access_token = kakao.getAccessToken(code);
         System.out.println("controller access_token : " + access_token);
         
-        Map<String, Object> userInfo = kakao.getUserInfo(access_token);
-        //System.out.println(userInfo.get("username"));
-        //System.out.println(userInfo.get("useremail"));
-        //System.out.println(userInfo.get("userphone"));
-        System.out.println("nickname : " + userInfo.get("nickname"));
-	    return "home";
+        String userInfo = kakao.getUserInfo(access_token);
+        
+        if ("success".equals(userInfo)) {
+        	return "redirect:/home";
+        } else {
+        	return "redirect:/social/loginPage";
+        }
 	}
 	
 	
