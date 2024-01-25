@@ -5,22 +5,34 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="/resources/css/home.css">
 <title>Insert title here</title>
 </head>
 <body>
-	<h2>메롱메롱 테스트</h2>
-	<c:if test="${not empty sessionScope.loginUser}">
-      ${sessionScope.loginUser.username}님 안녕하세요.
-      <br />
-		<a href="social/logout">로그아웃</a>
-		<a>게시판가기</a>
-	</c:if>
+	<div id="wrap">
+		<c:choose>
+			<c:when test="${not empty sessionScope.loginUser}">
+				<h2>${sessionScope.loginUser.username}님, 안녕하세요!
+					${sessionScope.loginUser.oauthtype}로 로그인하셨습니다.</h2>
+			</c:when>
+			<c:otherwise>
+				<h2>로그인 후 이용해주세요. 😊</h2>
+			</c:otherwise>
+		</c:choose>
 
-	<c:if test="${empty sessionScope.loginUser}">
-		<a href="social/loginPage">로그인</a>
-	</c:if>
+		<div>
+			<img src="/resources/images/welcome.png" alt="welcome">
+		</div>
 
-	<a>게시판가기</a>
+		<c:if test="${not empty sessionScope.loginUser}">
+			<a href="social/logout">로그아웃</a>
+			<a>게시판가기</a>
+		</c:if>
 
+		<c:if test="${empty sessionScope.loginUser}">
+			<a href="social/loginPage">로그인</a>
+		</c:if>
+	</div>
+	
 </body>
 </html>
