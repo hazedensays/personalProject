@@ -13,8 +13,10 @@
 		<c:choose>
 			<c:when test="${not empty sessionScope.loginUser}">
 				<h2>${sessionScope.loginUser.username}님, 안녕하세요!
-					${sessionScope.loginUser.oauthtype}로 로그인하셨습니다.</h2>
+					${sessionScope.loginUser.oauthtype}로 로그인하셨습니다.
+				</h2>
 			</c:when>
+			
 			<c:otherwise>
 				<h2>로그인 후 이용해주세요. 😊</h2>
 			</c:otherwise>
