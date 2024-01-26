@@ -24,7 +24,7 @@
 		</c:choose>
 
 		<div>
-			<img src="/resources/images/welcome.png" alt="welcome">
+			<img src="/resources/images/helloworld.png" alt="welcome">
 		</div>
 
 		<c:if test="${not empty sessionScope.loginUser}">
