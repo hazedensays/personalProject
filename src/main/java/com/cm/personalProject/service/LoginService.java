@@ -3,6 +3,7 @@ package com.cm.personalProject.service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -14,7 +15,6 @@ import com.cm.personalProject.domain.OauthId;
 import com.cm.personalProject.entity.User;
 import com.cm.personalProject.repository.UserRepository;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import lombok.RequiredArgsConstructor;
@@ -54,19 +54,33 @@ public class LoginService {
 				apiURL += "&redirect_uri=http://localhost:8080/social/klogin";
 				apiURL += "&code=" + code;
 				apiURL += "&client_secret=MP2DGb1FU2Xa3QcDKodnB1zTzEQLzGn5";
+			} else if ("google".equals(gate)) {
+				redirectURI = URLEncoder.encode("http://localhost:8080/social/glogin", "UTF-8");
+				apiURL = "https://oauth2.googleapis.com/token?grant_type=authorization_code&";
+				apiURL += "&client_id=192595726733-k5cn43gdkr8oaus87c1avq98ro4roaoc.apps.googleusercontent.com";
+				apiURL += "&redirect_uri=http://localhost:8080/social/glogin";
+				apiURL += "&code=" + code;
+				apiURL += "&client_secret=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";
 			}
 
 			URL url = new URL(apiURL);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Length", "1");
+			con.setDoOutput(true);
+			OutputStream outputStream = con.getOutputStream();
+			outputStream.write(" ".getBytes());
+			outputStream.flush();
+			outputStream.close();
+
 			int responseCode = con.getResponseCode();
 			BufferedReader br;
+			System.out.print("responseCode=" + responseCode);
 
 			if (responseCode == 200) { // 정상 호출
 				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			} else { // 에러 발생
 				br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-				System.out.println("에러 응답: " + br.readLine()); // 에러 응답 출력
 				return null;
 			}
 
@@ -80,7 +94,7 @@ public class LoginService {
 				System.out.println(res.toString());
 			}
 
-			String result = res.toString();
+			String result = res.toString(); // 변경: 읽은 내용을 String으로 변환
 			System.out.println("response body : " + result);
 
 			JsonParser parser = new JsonParser();
@@ -90,9 +104,11 @@ public class LoginService {
 
 			return element.getAsJsonObject().get("access_token").getAsString();
 		} catch (Exception e) {
-			log.error("Error during getAccessToken", e);
+			System.out.println(e);
+
 			return null;
 		}
+
 	}
 
 	// getUserInfo
@@ -100,11 +116,12 @@ public class LoginService {
 
 		String apiURL = "";
 
-		// 네이버 로그인 접근 토큰;
 		if ("naver".equals(gate)) {
 			apiURL = "https://openapi.naver.com/v1/nid/me";
 		} else if ("kakao".equals(gate)) {
 			apiURL = "https://kapi.kakao.com/v2/user/me";
+		} else if ("google".equals(gate)) {
+			apiURL = "https://www.googleapis.com/oauth2/v3/userinfo";
 		}
 
 		String headerStr = "Bearer " + accessToken; // Bearer 다음에 공백 추가
@@ -117,7 +134,7 @@ public class LoginService {
 		String token_id = "";
 		String nickname = "";
 		String email = "";
-//		      JsonObject response = element.getAsJsonObject().get(JsonObject);
+		// JsonObject response = element.getAsJsonObject().get(JsonObject);
 
 		if ("naver".equals(gate)) {
 			token_id = element.getAsJsonObject().get("response").getAsJsonObject().get("id").getAsString();
@@ -127,6 +144,10 @@ public class LoginService {
 			nickname = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
 			email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
 			token_id = element.getAsJsonObject().get("id").getAsString();
+		} else if ("google".equals(gate)) {
+			nickname = element.getAsJsonObject().get("name").getAsString();
+			email = element.getAsJsonObject().get("email").getAsString();
+			token_id = element.getAsJsonObject().get("sub").getAsString();
 		}
 
 		Optional<User> opt_user = repository.findById(new OauthId(gate, token_id));
@@ -155,6 +176,7 @@ public class LoginService {
 		if (headerStr != null && !headerStr.equals("")) {
 			con.setRequestProperty("Authorization", headerStr);
 		}
+
 		int responseCode = con.getResponseCode();
 		BufferedReader br;
 		System.out.println("responseCode=" + responseCode);
@@ -163,12 +185,14 @@ public class LoginService {
 		} else { // 에러 발생
 			br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
 		}
+
 		String inputLine;
 		StringBuffer res = new StringBuffer();
 		while ((inputLine = br.readLine()) != null) {
 			res.append(inputLine);
 		}
 		br.close();
+
 		if (responseCode == 200) {
 			return res.toString();
 		} else {

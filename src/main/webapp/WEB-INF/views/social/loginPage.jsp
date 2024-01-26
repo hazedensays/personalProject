@@ -22,7 +22,7 @@
 		</a>
 		<br />
 		
-		<a href="https://accounts.google.com/o/oauth2/auth?client_id=192595726733-k5cn43gdkr8oaus87c1avq98ro4roaoc.apps.googleusercontent.com&redirect_uri=http://localhost:8080/social/glogin&response_type=code&scope=https://www.googleapis.com/auth/userinfo.emailhttps://www.googleapis.com/auth/userinfo.profile">
+		<a href="https://accounts.google.com/o/oauth2/auth?client_id=192595726733-k5cn43gdkr8oaus87c1avq98ro4roaoc.apps.googleusercontent.com&redirect_uri=http://localhost:8080/social/glogin&response_type=code&scope=email%20profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&authuser=0&prompt=consent">
 			<img src="/resources/images/google_login_logo.png" alt="googleLogin IMG" />
 		</a>
 	</div>

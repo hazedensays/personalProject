@@ -12,7 +12,8 @@
 	<div id="wrap">
 		<c:choose>
 			<c:when test="${not empty sessionScope.loginUser}">
-				<h2>${sessionScope.loginUser.username}님, 안녕하세요!
+				<h2>
+					${sessionScope.loginUser.username}님, 안녕하세요!
 					${sessionScope.loginUser.oauthtype}로 로그인하셨습니다.
 				</h2>
 			</c:when>
