@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="/resources/css/home.css">
-<title>Insert title here</title>
+<title>social login</title>
 </head>
 <body>
 	<div id="wrap">
