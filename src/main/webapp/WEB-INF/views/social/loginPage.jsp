@@ -10,7 +10,7 @@
 </head>
 <body>
 	<div id="wrap">
-		<h2>소셜 로그인하기</h2>
+		<h2>Social Login</h2>
 
 		<a href="https://kauth.kakao.com/oauth/authorize?client_id=7c340b218caf1b7c5c6faed3222c37d3&redirect_uri=http://localhost:8080/social/klogin&response_type=code">
 			<img src="/resources/images/kakao_login_medium_wide.png" alt="kakaoLogin IMG" />
