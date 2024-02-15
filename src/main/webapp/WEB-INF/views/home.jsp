@@ -26,14 +26,13 @@
 		<div>
 			<img src="/resources/images/helloworld.png" alt="welcome">
 		</div>
-
-		<c:if test="${not empty sessionScope.loginUser}">
-			<a href="social/logout">로그아웃</a>
-			<a>게시판가기</a>
+		
+		<c:if test="${not empty sessionScope.loginUonScope.loginUser}">
+			<a href="social/loginPage">로그인</a>
 		</c:if>
 
 		<c:if test="${empty sessionScope.loginUser}">
-			<a href="social/loginPage">로그인</a>
+			<a href="board/boardPage">board</a>
 		</c:if>
 	</div>
 	

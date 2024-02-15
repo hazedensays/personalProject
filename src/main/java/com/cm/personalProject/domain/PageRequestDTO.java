@@ -15,7 +15,7 @@ import lombok.Data;
 public class PageRequestDTO {
     
     private int page; // 요청받은 PageNo
-    private int size; // 1페이지당 출력 row 갯수
+    private int size; // 1페이지당 출력 row 개수
     
     // ** 기본생성자로 초기화
     public PageRequestDTO() {
