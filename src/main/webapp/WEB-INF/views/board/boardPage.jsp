@@ -10,6 +10,28 @@
 <body>
 	<div id="wrap">
 		<div>
+			<div class="searchBox">
+	             <form action="boardPage" method="get">
+	                 <select name="searchType" id="searchType" onchange="keywordClear()">
+	                     <option value="all" ${requestScope.searchType == 'all' ? "selected" : "" }>전체</option>
+	                     <option value="useremail" ${requestScope.searchType == 'useremail' ? "selected" : "" }>userEmail</option>
+	                     <option value="board_title" ${requestScope.searchType == 'board_title' ? "selected" : "" }>title</option>
+	                     <option value="board_content" ${requestScope.searchType == 'board_content' ? "selected" : "" }>content</option>
+	                 </select>
+	                 
+	                 <input type="text" name="keyword" id="keyword" placeholder="검색어를 입력하세요." value="${requestScope.keyword}" />
+	                 <button type="submit" id="searchBtn">Search</button>
+	             </form>
+	        </div>
+
+			<div>
+				<a href="boardInsert">등록</a>
+			</div>
+		</div>
+	
+	
+	
+		<div>
 			<table>
 				<tr>
 					<th>글번호</th>

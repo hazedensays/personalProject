@@ -39,14 +39,12 @@ public class Board {
 	private String board_moddate;
 	private String board_deldate;
 	
-	@Column(nullable=false)
-	private char board_delyn;
+	@ColumnDefault("'N'")
+	private char board_delyn = 'N';
 	
-	@Column(nullable=false)
 	@ColumnDefault("0")
 	private int board_likes;
 	
-	@Column(nullable=false)
 	@ColumnDefault("0")
 	private int board_views;
 }
