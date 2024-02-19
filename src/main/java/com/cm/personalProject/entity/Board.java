@@ -40,7 +40,7 @@ public class Board {
 	private String board_deldate;
 	
 	@ColumnDefault("'N'")
-	private char board_delyn = 'N';
+	private char board_delyn;
 	
 	@ColumnDefault("0")
 	private int board_likes;

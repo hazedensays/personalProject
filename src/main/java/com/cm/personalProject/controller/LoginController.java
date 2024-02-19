@@ -66,6 +66,7 @@ public class LoginController {
 
 			if (userInfo != null) {
 				session.setAttribute("loginUser", userInfo);
+				//System.out.println(userInfo);
 				return "redirect:/home";
 			} else {
 				return "redirect:/social/loginPage";

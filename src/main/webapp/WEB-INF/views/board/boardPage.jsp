@@ -48,7 +48,7 @@
 							<td>${b.board_id}</td>
 							<td>${b.useremail}</td>
 							<td>${b.board_regdate}</td>
-							<td>${b.board_title}</td>
+							<td><a href="boardDetail?board_id=${b.board_id}">${b.board_title}</a></td>
 							<td>${b.board_likes}</td>
 							<td>${b.board_views}</td>
 						</tr>
