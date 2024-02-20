@@ -21,10 +21,6 @@
 				<td>
 					${requestScope.boardDetail.board_views}
 				</td>
-				<th>Likes</th>
-				<td>
-					${requestScope.boardDetail.board_likes}
-				</td>
 			</tr>
 
 			<tr>
@@ -54,6 +50,15 @@
 			</tr>
 		</table>
 		<hr/>
+		
+		<div>
+<%-- 			<button>❤️👍</button>
+			<span>${requestScope.boardDetail.board_likes}</span> --%>
+			
+			<button id="likeButton" onclick="toggleLike(${requestScope.boardDetail.board_id})">❤️👍</button>
+            <span id="likeCount">${requestScope.boardDetail.board_likes}</span>
+		
+		</div>
 
 		<div class="nav_box">
 		

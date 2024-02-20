@@ -11,8 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -83,12 +81,16 @@ public class BoardController {
 	// Detail =====================================================
 	@GetMapping("/boardDetail")
 	public String getBoardDetail(Model model, Board entity, HttpServletRequest request) {
-
-		model.addAttribute("boardDetail", boardService.selectDetail(entity.getBoard_id()));
+		
+		entity = boardService.selectDetail(entity.getBoard_id());
 
 		if ("U".equals(request.getParameter("jCode"))) {
+			model.addAttribute("boardDetail", entity);
 			return "board/boardUpdate";
 		} else {
+			entity.setBoard_views(entity.getBoard_views() + 1);
+			model.addAttribute("boardDetail", entity);
+			boardService.save(entity);
 			return "board/boardDetail";
 		}
 
@@ -120,16 +122,18 @@ public class BoardController {
 	
 	// Delete =====================================================
 	@PostMapping("/boardDelete/{board_id}")
-	public ResponseEntity<?> boardDelete(@PathVariable("board_id") int id, @RequestBody Board entity) {
-	    entity.setBoard_id(id);
-
-	    if (entity.getBoard_delyn() == 'N') {
-	        entity.setBoard_deldate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-	        entity.setBoard_delyn('Y');
+	public ResponseEntity<?> boardDelete(@PathVariable("board_id") int id) {
+	    
+		Board entity = boardService.selectDetail(id);
+		
+	    if (entity != null) {
+	    	entity.setBoard_deldate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+	    	entity.setBoard_delyn('Y');
 	        boardService.save(entity);
 	    }
 
 	    return ResponseEntity.ok().build();
 	}
+
 	
 }

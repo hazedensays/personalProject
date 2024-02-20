@@ -28,9 +28,7 @@
 				<a href="boardInsert">등록</a>
 			</div>
 		</div>
-	
-	
-	
+
 		<div>
 			<table>
 				<tr>

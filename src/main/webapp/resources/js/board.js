@@ -2,7 +2,7 @@ function axboardDelete(id) {
 	let url = "/board/boardDelete/" + id;
 
 	if (confirm("삭제하시겠습니까?")) {
-		axios.post(url, { board_delyn: 'Y'}
+		axios.post(url
 		).then(response => {
 			alert("삭제되었습니다.");
 			window.location.href = "/board/boardPage";
