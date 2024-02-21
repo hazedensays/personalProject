@@ -52,13 +52,34 @@
 		<hr/>
 		
 		<div>
-<%-- 			<button>❤️👍</button>
-			<span>${requestScope.boardDetail.board_likes}</span> --%>
-			
-			<button id="likeButton" onclick="toggleLike(${requestScope.boardDetail.board_id})">❤️👍</button>
+			<button id="likeButton" onclick="toggleLike(${requestScope.boardDetail.board_id}, '${sessionScope.loginUser.useremail}')">❤️👍</button>
             <span id="likeCount">${requestScope.boardDetail.board_likes}</span>
-		
 		</div>
+
+<script>
+    function toggleLike(board_id, useremail) {
+        console.log(board_id, useremail);
+        
+        let url = "/board/likesInsert/" + board_id + "/" + useremail;
+
+        axios.post(url)
+            .then(response => {
+                let likeCountElement = document.getElementById('likeCount');
+                let currentLikeCount = parseInt(likeCountElement.textContent);
+                
+                if (response.status === 200) {
+                    likeCountElement.textContent = currentLikeCount + 1; // 좋아요 추가
+                } else if (response.status === 204) {
+                    likeCountElement.textContent = currentLikeCount - 1; // 좋아요 삭제
+                }
+            })
+            .catch(error => {
+                console.error('Error toggling like:', error);
+            });
+    }
+</script>
+
+
 
 		<div class="nav_box">
 		
