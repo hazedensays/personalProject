@@ -145,7 +145,6 @@ public class BoardController {
 	
 	
 	// Likes Insert =====================================================
-	// Likes Insert =====================================================
 	@ResponseBody
 	@PostMapping("/likesInsert/{board_id}/{useremail}")
 	public ResponseEntity<?> postLikesInsert(@PathVariable("board_id") int board_id, @PathVariable("useremail") String useremail) {
@@ -157,22 +156,24 @@ public class BoardController {
 	        
 	        if (existingLike != null) {
 	            // 이미 좋아요를 눌렀다면 삭제
+	        	boardEntity.setBoard_likes(boardEntity.getBoard_likes() - 1);
 	            likesService.delete(existingLike);
+		        boardService.save(boardEntity);
 	            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 클라이언트에게 좋아요 삭제 상태 반환
 	        } else {
 	            // 좋아요를 누르지 않았다면 추가
 	            Likes newLike = new Likes();
 	            newLike.setUseremail(useremail);
 	            newLike.setBoard_id(board_id);
+	            boardEntity.setBoard_likes(boardEntity.getBoard_likes() + 1);
 	            likesService.save(newLike);
+		        boardService.save(boardEntity);
 	            return ResponseEntity.ok().build(); // 클라이언트에게 좋아요 추가 상태 반환
 	        }
+
 	    } else {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Board not found");
 	    }
 	}
-
-
-
 
 }
