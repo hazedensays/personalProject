@@ -21,8 +21,10 @@ import com.cm.personalProject.domain.LikesId;
 import com.cm.personalProject.domain.PageRequestDTO;
 import com.cm.personalProject.domain.PageResultDTO;
 import com.cm.personalProject.entity.Board;
+import com.cm.personalProject.entity.Comments;
 import com.cm.personalProject.entity.Likes;
 import com.cm.personalProject.service.BoardService;
+import com.cm.personalProject.service.CommentsService;
 import com.cm.personalProject.service.LikesService;
 
 import lombok.AllArgsConstructor;
@@ -36,6 +38,7 @@ public class BoardController {
 
 	private BoardService boardService;
 	private LikesService likesService;
+	private CommentsService commentsService;
 
 	// List =====================================================
 	@GetMapping("/boardPage")
@@ -143,7 +146,7 @@ public class BoardController {
 	    return ResponseEntity.ok().build();
 	} // boardDelete()
 	
-	
+	// ==================================== 좋아요 기능 ========================================
 	// Likes Insert =====================================================
 	@ResponseBody
 	@PostMapping("/likesInsert/{board_id}/{useremail}")
@@ -174,6 +177,57 @@ public class BoardController {
 	    } else {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Board not found");
 	    }
-	}
+	} // postLikesInsert()
+
+	
+	// ==================================== 댓글 기능 ========================================
+	// Insert =====================================================
+	@PostMapping("/commentsInsert")
+	public String postCommentsInsert(RedirectAttributes rttr, Comments entity, HttpServletRequest request) {
+		
+		int board_id = Integer.parseInt(request.getParameter("board_id"));
+		
+		String uri = "redirect:boardDetail?board_id=" + board_id;
+		
+		entity.setComment_delyn('N');
+		entity.setComment_regdate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+		entity.setComment_steps(0);
+		
+		try {
+			if (commentsService.save(entity) > 0) {
+				rttr.addFlashAttribute("message", "comments insert success");
+			} else {
+				rttr.addFlashAttribute("message", "comments insert fail");
+				//uri = "board/boardInsert";
+			}
+		} catch (Exception e) {
+			//uri = "board/boardInsert";
+			rttr.addFlashAttribute("message", "comments insert fail");
+			System.out.println("BoardInsert Exception => " + e.toString());
+		}
+
+		return uri;
+	} // postBoardInsert()
+	
+	// List =====================================================
+	@GetMapping("/commentsList")
+	public void getCommentsList(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "searchType", defaultValue = "") String searchType,
+			@RequestParam(value = "keyword", defaultValue = "") String keyword) {
+
+		PageRequestDTO requestDTO = PageRequestDTO.builder().page(page).size(5).build();
+		PageResultDTO<Board> resultDTO = boardService.selectList(requestDTO, searchType, keyword);
+
+		model.addAttribute("selectList", resultDTO.getEntityList());
+		model.addAttribute("resultDTO", resultDTO);
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("keyword", keyword);
+		
+	}// getBoardList()
+	
+	
+	
+	
+	
 
 }

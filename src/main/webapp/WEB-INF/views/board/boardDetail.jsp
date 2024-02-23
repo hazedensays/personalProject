@@ -49,38 +49,90 @@
 				</td>
 			</tr>
 		</table>
-		<hr/>
 		
 		<div>
 			<button id="likeButton" onclick="toggleLike(${requestScope.boardDetail.board_id}, '${sessionScope.loginUser.useremail}')">❤️👍</button>
             <span id="likeCount">${requestScope.boardDetail.board_likes}</span>
 		</div>
+		<hr/>
+		
+		
+		<!-- 댓글 기능 ===================== -->
+		<div>
+			<div>
+				<form action="commentsInsert" method="POST">
+					<table>
+						<tr>
+							<td>
+								<input type="hidden" id="board_id" name="board_id" value="${requestScope.boardDetail.board_id}" required/>
+							</td>
+						</tr>
+						
+						<tr>
+							<th>UserEmail</th>
+							<td>
+								${sessionScope.loginUser.useremail}
+								<input type="hidden" id="useremail" name="useremail" value="${sessionScope.loginUser.useremail}">
+							</td>
+						</tr>
 
-<script>
-    function toggleLike(board_id, useremail) {
-        console.log(board_id, useremail);
-        
-        let url = "/board/likesInsert/" + board_id + "/" + useremail;
+						<tr>
+							<th>Content</th>
+							<td>
+								<input type="text" id="comments_content" name="comment_content" required/>
+							</td>
+						</tr>
+		
+						<tr>
+							<td colspan="2">
+								<button type="reset">reset</button>
+								<button type="submit">submit</button>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			
+			<div class="container">
+				<table border=1px>
+					<tbody>
+					<%-- <c:if test="${not empty requestScope.comments}"> --%>
+						<tr style="text-align: center;">
+<!-- 							<th></th> -->
+							<th>닉네임</th>
+							<th>댓글내용</th>
+							<th>작성일</th>
+						</tr>
+						<c:forEach items="${rList }" var="comments" varStatus="i\c">
+							<tr>
+<%-- 								<td>
+									<input type="hidden" id="reviewIdx" value="${review.idx }"/>
+								</td> --%>
+								<td>${sessionScope.loginUser.useremail}</td>
+								<td>
+									<input class="review_content" type="text" value="${review.content}" autofocus disabled></td>
+								<td>
+<%-- 									<c:if test="${info.name eq review.name }"> --%>
+										<input data-idx="${review.idx }"
+											style="float: left; width: 50%;" type="image" class="edit"
+											value="수정">
+										<input data-idx="${review.idx }"
+											style="float: left; width: 50%;" type="image" class="delete"
+											value="삭제">
+<%-- 									</c:if> --%>
+									<br>
 
-        axios.post(url)
-            .then(response => {
-                let likeCountElement = document.getElementById('likeCount');
-                let currentLikeCount = parseInt(likeCountElement.textContent);
-                
-                if (response.status === 200) {
-                    likeCountElement.textContent = currentLikeCount + 1; // 좋아요 추가
-                } else if (response.status === 204) {
-                    likeCountElement.textContent = currentLikeCount - 1; // 좋아요 삭제
-                }
-            })
-            .catch(error => {
-                console.error('Error toggling like:', error);
-            });
-    }
-</script>
-
-
-
+									<label>${review.createdate}</label>
+								</td>
+							</tr>
+						</c:forEach>
+<%-- 						</c:if> --%>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<hr/>
+		
 		<div class="nav_box">
 		
 			<c:if test="${sessionScope.loginUser.useremail == requestScope.boardDetail.useremail}">

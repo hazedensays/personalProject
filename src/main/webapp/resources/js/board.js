@@ -1,3 +1,24 @@
+function toggleLike(board_id, useremail) {
+        console.log(board_id, useremail);
+        
+        let url = "/board/likesInsert/" + board_id + "/" + useremail;
+
+        axios.post(url)
+            .then(response => {
+                let likeCountElement = document.getElementById('likeCount');
+                let currentLikeCount = parseInt(likeCountElement.textContent);
+                
+                if (response.status === 200) {
+                    likeCountElement.textContent = currentLikeCount + 1; // 좋아요 추가
+                } else if (response.status === 204) {
+                    likeCountElement.textContent = currentLikeCount - 1; // 좋아요 삭제
+                }
+            })
+            .catch(error => {
+                console.error('Error toggling like:', error);
+            });
+    }
+
 function axboardDelete(id) {
 	let url = "/board/boardDelete/" + id;
 
@@ -17,3 +38,4 @@ function axboardDelete(id) {
 		alert("취소되었습니다.");
 	}
 }
+
