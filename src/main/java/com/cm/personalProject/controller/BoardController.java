@@ -90,10 +90,17 @@ public class BoardController {
 	
 	// Detail =====================================================
 	@GetMapping("/boardDetail")
-	public String getBoardDetail(Model model, Board entity, HttpServletRequest request) {
+	public String getBoardDetail(Model model, Board entity, HttpServletRequest request,
+							@RequestParam(value = "page", defaultValue = "1") int page) {
 		
 		entity = boardService.selectDetail(entity.getBoard_id());
+		
+		PageRequestDTO requestDTO = PageRequestDTO.builder().page(page).size(3).build();
+		PageResultDTO<Comments> resultDTO = commentsService.selectList(requestDTO, entity.getBoard_id());
 
+		model.addAttribute("resultDTO", resultDTO);
+		model.addAttribute("commentsList", resultDTO.getEntityList());
+		
 		if ("U".equals(request.getParameter("jCode"))) {
 			model.addAttribute("boardDetail", entity);
 			return "board/boardUpdate";
@@ -209,23 +216,33 @@ public class BoardController {
 		return uri;
 	} // postBoardInsert()
 	
-	// List =====================================================
-	@GetMapping("/commentsList")
-	public void getCommentsList(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "searchType", defaultValue = "") String searchType,
-			@RequestParam(value = "keyword", defaultValue = "") String keyword) {
-
-		PageRequestDTO requestDTO = PageRequestDTO.builder().page(page).size(5).build();
-		PageResultDTO<Board> resultDTO = boardService.selectList(requestDTO, searchType, keyword);
-
-		model.addAttribute("selectList", resultDTO.getEntityList());
-		model.addAttribute("resultDTO", resultDTO);
-		model.addAttribute("searchType", searchType);
-		model.addAttribute("keyword", keyword);
+	// Update =====================================================
+	@PostMapping("/commentsUpdate/{comment_id}/{updatedContent}")
+	public String postCommentsUpdate(@PathVariable("comment_id") int comment_id, @PathVariable("updatedContent") String updatedContent, 
+										Model model, Comments entity, RedirectAttributes rttr) {
 		
-	}// getBoardList()
-	
-	
+		System.out.println(updatedContent);
+	    
+	    String uri = "redirect:boardDetail?board_id=" + entity.getBoard_id();
+	    
+	    try {
+	        entity.setComment_moddate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+	        entity.setComment_content(updatedContent);
+	        
+	        if (commentsService.save(entity) > 0) {
+	        	//rttr.addFlashAttribute("boardDetail", entity);
+	            rttr.addFlashAttribute("message", "comments Update Success");
+	        } else {
+	            model.addAttribute("message", "comments Update Fail");
+	            //uri = "board/boardUpdate";
+	        }
+	    } catch (Exception e) {
+	        System.out.println("comments Update Exception => " + e.toString());
+	        //uri = "board/boardUpdate";
+	    }
+	    
+	    return uri;
+	} // postBoardUpdate()
 	
 	
 	

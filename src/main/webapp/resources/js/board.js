@@ -19,6 +19,7 @@ function toggleLike(board_id, useremail) {
             });
     }
 
+/*==================================================================*/
 function axboardDelete(id) {
 	let url = "/board/boardDelete/" + id;
 
@@ -38,4 +39,53 @@ function axboardDelete(id) {
 		alert("취소되었습니다.");
 	}
 }
+
+
+/*==================================================================*/
+function axboardUpdate(event, comment_id) {
+	event.preventDefault();
+	
+    let spanElements = document.querySelectorAll('span[data-comment-id="' + comment_id + '"]');
+    let inputElements = document.querySelectorAll('input[data-comment-id="' + comment_id + '"]');
+    let buttonElement = document.querySelector('button[data-comment-id="' + comment_id + '"]');
+
+    spanElements.forEach(function(span) {
+        span.style.display = 'none';
+    });
+    
+    inputElements.forEach(function(input) {
+        input.style.display = 'block';
+    });
+    
+    buttonElement.innerHTML = "완료";
+    
+    let updatedContent = inputElements[0].value;
+    let url = "/board/commentsUpdate/" + comment_id + "/" + updatedContent;
+    
+    axios.post(url)
+    .then(function(response) {
+        console.log(response);
+    })
+    .catch(function(error) {
+        console.error(error);
+    });
+    
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

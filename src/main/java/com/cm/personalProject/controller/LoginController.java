@@ -31,14 +31,14 @@ public class LoginController {
 
 	@GetMapping("/klogin")
 	public String klogin(@RequestParam("code") String code, Model model, HttpSession session) {
-		System.out.println(code);
+		//System.out.println(code);
 		String access_token = loginService.getAccessToken(code, "kakao");
 
-		System.out.println("controller access_token : " + access_token);
+		//System.out.println("controller access_token : " + access_token);
 
 		try {
 			User userInfo = loginService.getUserInfo(access_token, "kakao");
-			System.out.println("*****************" + userInfo);
+			//System.out.println("*****************" + userInfo);
 
 			if (userInfo != null) {
 				session.setAttribute("loginUser", userInfo);
@@ -56,13 +56,13 @@ public class LoginController {
 
 	@GetMapping("/nlogin")
 	public String nlogin(@RequestParam("code") String code, Model model, HttpSession session) {
-		System.out.println(code);
+		//System.out.println(code);
 
 		String access_token = loginService.getAccessToken(code, "naver");
 
 		try {
 			User userInfo = loginService.getUserInfo(access_token, "naver");
-			System.out.println("*****************" + userInfo);
+			//System.out.println("*****************" + userInfo);
 
 			if (userInfo != null) {
 				session.setAttribute("loginUser", userInfo);
@@ -81,13 +81,13 @@ public class LoginController {
 
 	@GetMapping("/glogin")
 	public String glogin(@RequestParam("code") String code, Model model, HttpSession session) {
-		System.out.println(code);
+		//System.out.println(code);
 
 		String access_token = loginService.getAccessToken(code, "google");
 
 		try {
 			User userInfo = loginService.getUserInfo(access_token, "google");
-			System.out.println("*****************" + userInfo);
+			//System.out.println("*****************" + userInfo);
 
 			if (userInfo != null) {
 				session.setAttribute("loginUser", userInfo);

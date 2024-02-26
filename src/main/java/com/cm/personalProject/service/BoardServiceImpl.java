@@ -29,9 +29,11 @@ public class BoardServiceImpl implements BoardService {
 	public PageResultDTO<Board> selectList(PageRequestDTO requestDTO, String searchType, String keyword) {
 		BooleanExpression searchCondition = getSearchCondition(searchType, keyword);
 
-		QueryResults<Board> result = queryFactory.selectFrom(board)
+		QueryResults<Board> result = queryFactory
+				.selectFrom(board)
 				.where(board.board_delyn.eq('N').and(searchCondition)).orderBy(board.board_id.desc())
-				.offset(requestDTO.getPageable().getOffset()).limit(requestDTO.getPageable().getPageSize())
+				.offset(requestDTO.getPageable().getOffset())
+				.limit(requestDTO.getPageable().getPageSize())
 				.fetchResults();
 
 		return new PageResultDTO<>(result, requestDTO.getPageable());

@@ -93,43 +93,81 @@
 				</form>
 			</div>
 			
-			<div class="container">
-				<table border=1px>
-					<tbody>
-					<%-- <c:if test="${not empty requestScope.comments}"> --%>
-						<tr style="text-align: center;">
-<!-- 							<th></th> -->
-							<th>닉네임</th>
-							<th>댓글내용</th>
-							<th>작성일</th>
-						</tr>
-						<c:forEach items="${rList }" var="comments" varStatus="i\c">
-							<tr>
-<%-- 								<td>
-									<input type="hidden" id="reviewIdx" value="${review.idx }"/>
-								</td> --%>
-								<td>${sessionScope.loginUser.useremail}</td>
-								<td>
-									<input class="review_content" type="text" value="${review.content}" autofocus disabled></td>
-								<td>
-<%-- 									<c:if test="${info.name eq review.name }"> --%>
-										<input data-idx="${review.idx }"
-											style="float: left; width: 50%;" type="image" class="edit"
-											value="수정">
-										<input data-idx="${review.idx }"
-											style="float: left; width: 50%;" type="image" class="delete"
-											value="삭제">
-<%-- 									</c:if> --%>
-									<br>
-
-									<label>${review.createdate}</label>
-								</td>
-							</tr>
+			<div>
+				<div>
+					<ul style="list-style: none; display: flex; flex-direction: row;">
+						<li style="margin-right: 10px;">댓글번호</li>
+						<li style="margin-right: 50px;">작성자</li>
+						<li style="margin-right: 30px;">글</li>
+						<li style="margin-right: 10px;">등록일</li>
+					</ul>
+	
+					<c:if test="${not empty requestScope.commentsList}">
+						<c:forEach var="c" items="${requestScope.commentsList}">
+						    <form action="commentsUpdate" method="POST">
+						        <ul style="list-style: none; display: flex; flex-direction: row;">
+						            <li style="margin-right: 10px;">
+						                <span>${c.comment_id}</span>
+						                <input type="hidden" name="comment_id" id="comment_id" value="${c.comment_id}" />
+						            </li>
+						            
+						            <li style="margin-right: 10px;">
+						                <span>${c.useremail}</span>
+						                <input type="hidden" name="comment_id" id="comment_id" value="${c.useremail}"/>
+						            </li>
+						            
+						           <li style="margin-right: 10px;">
+									    <span data-comment-id="${c.comment_id}">${c.comment_content}</span>
+									    <input type="text" id="comments_content" name="comment_content" value="${c.comment_content}" style="display: none;" data-comment-id="${c.comment_id}"/>
+									</li>
+									
+									<li style="margin-right: 10px;">
+									    <c:if test="${sessionScope.loginUser.useremail == c.useremail}">
+									        <button onclick="axboardUpdate(event, ${c.comment_id})" data-comment-id="${c.comment_id}">수정</button>
+									        <!-- 삭제 버튼 -->
+									        <button>삭제</button>
+									    </c:if>
+									</li>
+						        </ul>
+						    </form>
 						</c:forEach>
-<%-- 						</c:if> --%>
-					</tbody>
-				</table>
+					</c:if>
+				</div>
 			</div>
+
+			<div class="pageNation">
+                 <c:choose>
+                      <c:when test="${resultDTO.start != resultDTO.page}">
+                           <a class ="firstB" href="boardDetail?board_id=${requestScope.boardDetail.board_id}&page=${resultDTO.start}">처음</a>
+                           <a class ="ltB" href="boardDetail?board_id=${requestScope.boardDetail.board_id}&page=${resultDTO.page-1}">&LT;</a>
+                      </c:when>
+                      <c:otherwise>
+                           <span class ="firstB">처음</span>
+                           <span class ="ltB">&LT;</span>
+                      </c:otherwise>
+                  </c:choose>     
+                       
+                  <c:forEach var="i" items="${resultDTO.pageList}">
+                      <c:if test="${i==resultDTO.page}">
+                          <span><strong>${i}</strong></span>&nbsp;
+                      </c:if>
+                      <c:if test="${i!=resultDTO.page}">
+                          <a href="boardDetail?board_id=${requestScope.boardDetail.board_id}&page=${i}">${i}</a>&nbsp;
+                      </c:if>
+                  </c:forEach>
+                         
+                  <c:choose>
+                      <c:when test="${resultDTO.end != resultDTO.page}">
+                          <a class="gtB" href="boardDetail?board_id=${requestScope.boardDetail.board_id}&page=${resultDTO.page+1}">&GT;</a>
+                          <a class="lastB" href="boardDetail?board_id=${requestScope.boardDetail.board_id}&page=${resultDTO.end}">마지막</a>
+                      </c:when>
+                      <c:otherwise>
+                          <span class="gtB">&GT;</span>
+                          <span class="lastB">마지막</span>
+                      </c:otherwise>
+                  </c:choose>
+             </div>
+         </div>
 		</div>
 		<hr/>
 		
