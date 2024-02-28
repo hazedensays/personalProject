@@ -21,30 +21,30 @@ function toggleLike(board_id, useremail) {
 
 /*==================================================================*/
 function axboardDelete(id) {
-	let url = "/board/boardDelete/" + id;
+   let url = "/board/boardDelete/" + id;
 
-	if (confirm("삭제하시겠습니까?")) {
-		axios.post(url
-		).then(response => {
-			alert("삭제되었습니다.");
-			window.location.href = "/board/boardPage";
-		}).catch(err => {
-			if (err.response && err.response.status === 502) {
-				alert("[삭제 오류]" + err.response.data);
-			} else {
-				alert("[시스템 오류]" + err.message);
-			}
-		});
-	} else {
-		alert("취소되었습니다.");
-	}
+   if (confirm("삭제하시겠습니까?")) {
+      axios.post(url
+      ).then(response => {
+         alert("삭제되었습니다.");
+         window.location.href = "/board/boardPage";
+      }).catch(err => {
+         if (err.response && err.response.status === 502) {
+            alert("[삭제 오류]" + err.response.data);
+         } else {
+            alert("[시스템 오류]" + err.message);
+         }
+      });
+   } else {
+      alert("취소되었습니다.");
+   }
 }
 
 
 /*==================================================================*/
 function axboardUpdate(event, comment_id) {
-	event.preventDefault();
-	
+   event.preventDefault();
+   
     let spanElements = document.querySelectorAll('span[data-comment-id="' + comment_id + '"]');
     let inputElements = document.querySelectorAll('input[data-comment-id="' + comment_id + '"]');
     let buttonElement = document.querySelector('button[data-comment-id="' + comment_id + '"]');
@@ -56,35 +56,8 @@ function axboardUpdate(event, comment_id) {
     inputElements.forEach(function(input) {
         input.style.display = 'block';
     });
-    
-    buttonElement.innerHTML = "완료";
-    
-    let updatedContent = inputElements[0].value;
-    let url = "/board/commentsUpdate/" + comment_id + "/" + updatedContent;
-    
-    axios.post(url)
-    .then(function(response) {
-        console.log(response);
-    })
-    .catch(function(error) {
-        console.error(error);
-    });
-    
-    
-    
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -91,26 +91,27 @@ public class BoardController {
 	// Detail =====================================================
 	@GetMapping("/boardDetail")
 	public String getBoardDetail(Model model, Board entity, HttpServletRequest request,
-							@RequestParam(value = "page", defaultValue = "1") int page) {
-		
-		entity = boardService.selectDetail(entity.getBoard_id());
-		
-		PageRequestDTO requestDTO = PageRequestDTO.builder().page(page).size(3).build();
-		PageResultDTO<Comments> resultDTO = commentsService.selectList(requestDTO, entity.getBoard_id());
+	                        @RequestParam(value = "page", defaultValue = "1") int page) {
 
-		model.addAttribute("resultDTO", resultDTO);
-		model.addAttribute("commentsList", resultDTO.getEntityList());
-		
-		if ("U".equals(request.getParameter("jCode"))) {
-			model.addAttribute("boardDetail", entity);
-			return "board/boardUpdate";
-		} else {
-			entity.setBoard_views(entity.getBoard_views() + 1);
-			model.addAttribute("boardDetail", entity);
-			boardService.save(entity);
-			return "board/boardDetail";
-		}
+	    entity = boardService.selectDetail(entity.getBoard_id());
 
+	    PageRequestDTO requestDTO = PageRequestDTO.builder().page(page).size(3).build();
+	    PageResultDTO<Comments> resultDTO = commentsService.selectList(requestDTO, entity.getBoard_id());
+
+	    model.addAttribute("resultDTO", resultDTO);
+	    model.addAttribute("commentsList", resultDTO.getEntityList());
+
+	    if ("U".equals(request.getParameter("jCode"))) {
+	        model.addAttribute("boardDetail", entity);
+	        model.addAttribute("buttonState", true); // 수정 버튼 보이도록 설정
+	        return "board/boardUpdate";
+	    } else {
+	        entity.setBoard_views(entity.getBoard_views() + 1);
+	        model.addAttribute("boardDetail", entity);
+	        boardService.save(entity);
+	        model.addAttribute("buttonState", false); // 완료 버튼 보이도록 설정
+	        return "board/boardDetail";
+	    }
 	} // getBoardDetail()
 	
 	
@@ -192,7 +193,7 @@ public class BoardController {
 	@PostMapping("/commentsInsert")
 	public String postCommentsInsert(RedirectAttributes rttr, Comments entity, HttpServletRequest request) {
 		
-		int board_id = Integer.parseInt(request.getParameter("board_id"));
+		int board_id = entity.getBoard_id();
 		
 		String uri = "redirect:boardDetail?board_id=" + board_id;
 		
@@ -217,17 +218,14 @@ public class BoardController {
 	} // postBoardInsert()
 	
 	// Update =====================================================
-	@PostMapping("/commentsUpdate/{comment_id}/{updatedContent}")
-	public String postCommentsUpdate(@PathVariable("comment_id") int comment_id, @PathVariable("updatedContent") String updatedContent, 
-										Model model, Comments entity, RedirectAttributes rttr) {
-		
-		System.out.println(updatedContent);
-	    
-	    String uri = "redirect:boardDetail?board_id=" + entity.getBoard_id();
+	@PostMapping("/commentsUpdate")
+    public String postCommentsUpdate(Model model, RedirectAttributes rttr, Comments entity) {
+
+	    String uri = "redirect:/board/boardDetail?board_id=" + entity.getBoard_id();
 	    
 	    try {
-	        entity.setComment_moddate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-	        entity.setComment_content(updatedContent);
+	    	entity.setComment_moddate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+	    	entity.setComment_content(entity.getComment_content());
 	        
 	        if (commentsService.save(entity) > 0) {
 	        	//rttr.addFlashAttribute("boardDetail", entity);
