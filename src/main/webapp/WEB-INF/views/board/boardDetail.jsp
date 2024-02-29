@@ -8,53 +8,44 @@
 <title>Board</title>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/resources/js/board.js"></script>
+<link rel="stylesheet" href="/resources/css/boardDetail.css" />
 </head>
 <body>
    <div id="wrap">
-      <table border=1px>
-         <tr>
-            <th>Board Number</th>
-            <td>
-               ${requestScope.boardDetail.board_id}
-            </td>
-            <th>Views</th>
-            <td>
-               ${requestScope.boardDetail.board_views}
-            </td>
-         </tr>
-
-         <tr>
-            <th colspan="3">Board title</th>
-            <td  colspan="3">
-               ${requestScope.boardDetail.board_title}
-            </td>
-      
-            <th colspan="3">등록일</th>
-            <td  colspan="3">
-               ${requestScope.boardDetail.board_regdate}
-            </td>
-         </tr>
-
-         <tr>
-            <th  colspan="3">Writer</th>
-            <td  colspan="3">
-               ${requestScope.boardDetail.useremail}
-            </td>
-         </tr>
-         
-         <tr>
-            <th colspan="3">Content</th>
-            <td colspan="3">
-               ${requestScope.boardDetail.board_content}
-            </td>
-         </tr>
-      </table>
-      
-      <div>
-         <button id="likeButton" onclick="toggleLike(${requestScope.boardDetail.board_id}, '${sessionScope.loginUser.useremail}')">❤️👍</button>
-            <span id="likeCount">${requestScope.boardDetail.board_likes}</span>
-      </div>
-      <hr/>
+      <table border="1">
+		    <tr>
+		        <th>Board Number</th>
+		        <td>${requestScope.boardDetail.board_id}</td>
+		        <th>Views</th>
+		        <td>${requestScope.boardDetail.board_views}</td>
+		    </tr>
+		
+		    <tr>
+		        <th colspan="3">Board title</th>
+		        <td colspan="3">${requestScope.boardDetail.board_title}</td>
+		    </tr>
+		
+		    <tr>
+		        <th colspan="3">등록일</th>
+		        <td colspan="3">${requestScope.boardDetail.board_regdate}</td>
+		    </tr>
+		
+		    <tr>
+		        <th colspan="3">Writer</th>
+		        <td colspan="3">${requestScope.boardDetail.useremail}</td>
+		    </tr>
+		
+		    <tr>
+		        <th colspan="3">Content</th>
+		        <td colspan="3">${requestScope.boardDetail.board_content}</td>
+		    </tr>
+		</table>
+		
+		<div class="like-container">
+		    <button id="likeButton" onclick="toggleLike(${requestScope.boardDetail.board_id}, '${sessionScope.loginUser.useremail}')">❤️👍</button>
+		    <span id="likeCount">${requestScope.boardDetail.board_likes}</span>
+		</div>
+		<hr/>
       
       
       <!-- 댓글 기능 ===================== -->
@@ -63,16 +54,11 @@
             <form action="commentsInsert" method="POST">
                <table>
                   <tr>
-                     <td>
-                        <input type="hidden" id="board_id" name="board_id" value="${requestScope.boardDetail.board_id}" required/>
-                     </td>
-                  </tr>
-                  
-                  <tr>
                      <th>UserEmail</th>
                      <td>
                         ${sessionScope.loginUser.useremail}
                         <input type="hidden" id="useremail" name="useremail" value="${sessionScope.loginUser.useremail}">
+		                <input type="hidden" id="board_id" name="board_id" value="${requestScope.boardDetail.board_id}" required/>
                      </td>
                   </tr>
 
@@ -93,52 +79,52 @@
             </form>
          </div>
          
-         <div>
-            <div>
-               <ul style="list-style: none; display: flex; flex-direction: row;">
-                  <li style="margin-right: 10px;">댓글번호</li>
-                  <li style="margin-right: 50px;">작성자</li>
-                  <li style="margin-right: 30px;">글</li>
-                  <li style="margin-right: 10px;">등록일</li>
-               </ul>
-   
-               <c:if test="${not empty requestScope.commentsList}">
-                  	<ul style="list-style: none; display: flex; flex-direction: row;">
-                  		<c:forEach var="c" items="${requestScope.commentsList}">
-                        	<li>
-                      			<form action="commentsUpdate" method="POST">
-	                                	<span>${c.comment_id}</span>
-		                                <input type="hidden" name="comment_id" id="comment_id" value="${c.comment_id}" />
-		                                <input type="hidden" id="board_id" name="board_id" value="${c.board_id}" />
-		                                <input type="hidden" name="comment_delyn" id="comment_delyn" value="${c.comment_delyn}" />
-		                                <input type="hidden" name="comment_root" id="comment_root" value="${c.comment_root}" />
-		                                <input type="hidden" name="comment_regdate" id="comment_regdate" value="${c.comment_regdate}" />
-		                                <input type="hidden" name="comment_steps" id="comment_steps" value="${c.comment_steps}" />
-		                              	
-		                              
-		                                <span>${c.useremail}</span>
-		                                <input type="hidden" name="useremail" id="useremail" value="${c.useremail}"/>
-		                              
-		                               <span data-comment-id="${c.comment_id}">${c.comment_content}</span>
-		                               <input type="text" id="comments_content" name="comment_content" value="${c.comment_content}" style="display: none;" data-comment-id="${c.comment_id}"/>
-                           
-	                               	<c:if test="${sessionScope.loginUser.useremail == c.useremail}">
-										<div class="modifyBtn" style="display: ${buttonState ? 'block' : 'none'};">
-										    <button>수정</button>
-										    <button>삭제</button>
-										</div>
-										<div class="completeBtn" style="display: ${buttonState ? 'none' : 'block'};">
-										    <button>완료</button>
-										    <button>취소</button>
-										</div>
-	                               	</c:if>
-                      			</form>
-                           	</li>
-                  		</c:forEach>
-                    </ul>
-               </c:if>
-            </div>
-         </div>
+         <div class="comments">
+			<form action="updateComments" method="post">
+				<table>
+					<tr>
+						<th>댓글 번호</th>
+						<th>작성자</th>
+						<th>댓글 내용</th>
+						<th>등록일</th>
+						<th>수정</th>
+						<th>삭제</th>
+					</tr>
+
+					<c:if test="${not empty requestScope.commentsList}">
+						<c:forEach var="c" items="${requestScope.commentsList}">
+
+							<tr>
+								<td>${c.comment_id}</td>
+								<td>${c.useremail}</td>
+								<td>
+									<span class="comment-content">${c.comment_content}</span>
+									<input type="text" class="edit-comment" style="display: none;" value="${c.comment_content}">
+								</td>
+								<td>${c.comment_regdate}</td>
+								
+								<c:if test="${sessionScope.loginUser.useremail == c.useremail}">
+									<td>
+										<button data-idx="${c.comment_id}" class="edit-btn">수정</button>
+									</td>
+									
+									<td>
+										<button data-idx="${c.comment_id}" class="delete-btn">삭제</button>
+									</td>
+								</c:if>
+							</tr>
+						</c:forEach>
+					</c:if>
+
+<%-- 					<c:if test="${empty requestScope.commentsList}">
+						<tr>
+							<th colspan="4">게시글에 작성된 댓글이 없습니다.</th>
+						</tr>
+					</c:if> --%>
+					
+				</table>
+			</form>
+		</div>
 
          <div class="pageNation">
                  <c:choose>
