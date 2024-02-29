@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				button.textContent = '수정';
 				button.classList.remove('update-btn');
 
-				// Ajax를 사용하여 수정된 댓글을 서버로 전송
+				// Axios를 사용하여 수정된 댓글을 서버로 전송
 				let comment_id = button.getAttribute('data-idx');
 				updateCommentOnServer(comment_id, updatedComment);
 			} else {
@@ -77,55 +77,50 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	function updateCommentOnServer(comment_id, updatedComment) {
-		let xhr = new XMLHttpRequest();
-		xhr.open('POST', '/board/updateComments', true);
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		let url = '/board/updateComments';
+		let formData = new FormData();
+		formData.append('comment_id', comment_id);
+		formData.append('comment_content', updatedComment);
 
-		// 수정된 댓글 데이터를 서버로 전송
-		let formData = 'comment_id=' + comment_id + '&comment_content=' + encodeURIComponent(updatedComment);
-		xhr.send(formData);
+		axios.post(url, formData)
+			.then(response => {
+				console.log('댓글이 성공적으로 업데이트되었습니다.');
+			})
+			.catch(error => {
+				console.error('댓글 업데이트에 실패했습니다:', error);
+			});
 	}
 });
 
+// 댓글 삭제
+document.addEventListener('DOMContentLoaded', function() {
+	let deleteButtons = document.querySelectorAll('.delete-btn');
+	deleteButtons.forEach(function(button) {
+		button.addEventListener('click', function(event) {
+			event.preventDefault();
+			handleDeleteButtonClick(button);
+		});
+	});
 
-//댓글 삭제 
-// 삭제 버튼 클릭 시
-document.addEventListener('DOMContentLoaded', function () {
-    let deleteButtons = document.querySelectorAll('.delete-btn');
-    deleteButtons.forEach(function (button) {
-        button.addEventListener('click', function (event) {
-            event.preventDefault();
-            handleDeleteButtonClick(button);
-        });
-    });
-
-    function handleDeleteButtonClick(button) {
-        let comment_id = button.getAttribute('data-idx');
-        deleteCommentOnServer(comment_id);
-    }
+	function handleDeleteButtonClick(button) {
+		let comment_id = button.getAttribute('data-idx');
+		deleteCommentOnServer(comment_id);
+	}
 });
 
 function deleteCommentOnServer(comment_id) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('DELETE', '/board/deleteComments?comment_id=' + comment_id, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	let url = '/board/deleteComments?comment_id=' + comment_id;
 
-    // 삭제할 댓글의 ID를 서버로 전송
-    let formData = 'comment_id=' + comment_id;
-    xhr.send(formData);
-
-    // 서버 응답 확인
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                console.log('댓글이 성공적으로 삭제되었습니다.');
-                // 삭제 성공 시 적절한 화면 갱신 로직 추가
-                	alert("댓글이 삭제되었습니다.");
-                    window.location.reload();
-            } else {
-                console.error('댓글 삭제에 실패했습니다.');
-            }
-        }
-    };
+	axios.delete(url)
+		.then(response => {
+			console.log('댓글이 성공적으로 삭제되었습니다.');
+			// 삭제 성공 시 적절한 화면 갱신 로직 추가
+			alert('댓글이 삭제되었습니다.');
+			window.location.reload();
+		})
+		.catch(error => {
+			console.error('댓글 삭제에 실패했습니다:', error);
+		});
 }
+
 
