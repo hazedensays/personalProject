@@ -123,4 +123,11 @@ function deleteCommentOnServer(comment_id) {
 		});
 }
 
+/*==================================================================*/
+function toggleReply(comment_id) {
+        const replyContainer = document.getElementById(`reply-${comment_id}`);
+        replyContainer.style.display = (replyContainer.style.display === 'none') ? 'block' : 'none';
+    }
+
+
 

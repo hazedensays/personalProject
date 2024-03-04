@@ -250,5 +250,16 @@ public class BoardController {
 		}
 
 		return ResponseEntity.ok().build();
-	}
+	} // deleteComment()
+	
+	// ==================================== 무한 댓글 기능 ========================================
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
