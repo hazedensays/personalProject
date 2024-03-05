@@ -3,13 +3,16 @@ package com.cm.personalProject.service;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cm.personalProject.domain.PageRequestDTO;
 import com.cm.personalProject.domain.PageResultDTO;
 import com.cm.personalProject.entity.Board;
+import com.cm.personalProject.entity.Comments;
 import com.cm.personalProject.entity.QBoard;
 import com.cm.personalProject.repository.BoardRepository;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.dml.UpdateClause;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 

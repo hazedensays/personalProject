@@ -15,5 +15,7 @@ public interface CommentsService {
 	public int save(Comments entity);
 
 	public int delete(int comment_id);
+	
+	public void stepUpdate(Comments entity);
 
 }

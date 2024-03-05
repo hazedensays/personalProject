@@ -107,7 +107,6 @@ public class BoardController {
 		} else {
 			entity.setBoard_views(entity.getBoard_views() + 1);
 			model.addAttribute("boardDetail", entity);
-			model.addAttribute("buttonState", true);
 			boardService.save(entity);
 			return "board/boardDetail";
 		}
@@ -194,11 +193,14 @@ public class BoardController {
 
 		String uri = "redirect:boardDetail?board_id=" + board_id;
 
-		entity.setComment_delyn('N');
-		entity.setComment_regdate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-		entity.setComment_steps(0);
-
 		try {
+			
+			entity.setComment_regdate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+	        entity.setComment_delyn('N');
+	        int tempEntity = commentsService.save(entity);
+	         
+	        entity.setComment_root(tempEntity);
+
 			if (commentsService.save(entity) > 0) {
 				rttr.addFlashAttribute("message", "comments insert success");
 			} else {
@@ -253,13 +255,38 @@ public class BoardController {
 	} // deleteComment()
 	
 	// ==================================== 무한 댓글 기능 ========================================
+	@PostMapping("/commentReply")
+	public String postCommentReply(RedirectAttributes rttr, Comments entity, HttpServletRequest request) {
+
+		int board_id = entity.getBoard_id();
+		String uri = "redirect:boardDetail?board_id=" + board_id;
+
+		try {
+			entity.setComment_regdate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+	        entity.setComment_delyn('N');
+	         
+	        Comments parents = commentsService.selectDetail(entity.getComment_root());
+	        entity.setComment_root(parents.getComment_root());
+	        entity.setComment_steps(entity.getComment_steps()+1);
+	        entity.setComment_indent(entity.getComment_indent()+1);
+
+			if (commentsService.save(entity) > 0) {
+				commentsService.stepUpdate(entity);
+				rttr.addFlashAttribute("message", "comments insert success");
+			} else {
+				rttr.addFlashAttribute("message", "comments insert fail");
+			}
+		} catch (Exception e) {
+			rttr.addFlashAttribute("message", "comments insert fail");
+			System.out.println("BoardInsert Exception => " + e.toString());
+		}
+
+		return uri;
+	} // postCommentReply()
 	
 	
 	
 	
 	
-	
-	
-	
-	
+
 }
