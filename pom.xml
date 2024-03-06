@@ -27,7 +27,6 @@
          <artifactId>spring-boot-starter-web</artifactId>
       </dependency>
        
-      <!-- aws배포를 위한 설정 -->
       <dependency>
            <groupId>org.springframework.boot</groupId>
            <artifactId>spring-boot-starter-tomcat</artifactId>
