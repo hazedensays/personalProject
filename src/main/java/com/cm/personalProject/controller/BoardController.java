@@ -283,10 +283,5 @@ public class BoardController {
 
 		return uri;
 	} // postCommentReply()
-	
-	
-	
-	
-	
 
 }
