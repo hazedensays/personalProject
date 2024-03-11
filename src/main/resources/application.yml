@@ -13,7 +13,7 @@ spring:
     url: "jdbc:mysql://localhost:3306/personal_project?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
     username: root
     password: mysql
-    application:
+  application:
       name: personalProject
 
   jpa:
