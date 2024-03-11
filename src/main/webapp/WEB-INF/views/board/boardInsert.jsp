@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Board</title>
+<link rel="stylesheet" href="/resources/css/boardInsert.css" />
 </head>
 <body>
 	<div id="wrap">

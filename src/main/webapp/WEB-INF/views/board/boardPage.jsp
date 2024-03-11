@@ -6,10 +6,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Board</title>
+<link rel="stylesheet" href="/resources/css/boardPage.css" />
 </head>
 <body>
 	<div id="wrap">
-		<div>
+		<div class="parent-container">
 			<div class="searchBox">
 	             <form action="boardPage" method="get">
 	                 <select name="searchType" id="searchType" onchange="keywordClear()">
@@ -24,7 +25,7 @@
 	             </form>
 	        </div>
 
-			<div>
+			<div class="register-link">
 				<a href="boardInsert">등록</a>
 			</div>
 		</div>
