@@ -12,7 +12,7 @@
 </head>
 <body>
 	<div id="wrap">
-		<ul>
+		<ul class="ulboardDetail">
 			<li>
 				<span>Board Number</span>
 				<span>${requestScope.boardDetail.board_id}</span>
@@ -45,14 +45,14 @@
 		</ul>
 
 		<div class="like-container">
-			<button id="likeButton" onclick="toggleLike(${requestScope.boardDetail.board_id}, '${sessionScope.loginUser.useremail}')">❤️👍</button>
+			<button id="likeButton" onclick="toggleLike(${requestScope.boardDetail.board_id}, '${sessionScope.loginUser.useremail}')">💙</button>
 			<span id="likeCount">${requestScope.boardDetail.board_likes}</span>
 		</div>
 		<hr />
 
 		<!-- 댓글 기능 ===================== -->
-		<div>
-			<div>
+		<div class="wrapComments">
+			<div class="submitComments">
 				<form action="commentsInsert" method="POST">
 					<ul>
 						<li><span>UserEmail</span> <span>${sessionScope.loginUser.useremail}</span>
@@ -67,29 +67,28 @@
 							</span>
 						</li>
 						
-						<li>
+						<li class="buttonList">
 							<button type="reset">reset</button>
 							<button type="submit">submit</button>
 						</li>
 					</ul>
 				</form>
 			</div>
+			<hr/>
 
 			<div class="comments">
 				<ul>
-					<li>
-						<span>댓글 번호</span>
+<!-- 					<li class="commentsTitle">
 						<span>작성자</span>
 						<span>댓글 내용</span>
 						<span>등록일</span>
-						<span>수정</span>
-						<span>삭제</span>
-					</li>
+						<span>수정/삭제</span>
+						<span>reply</span>
+					</li> -->
 
 					<c:if test="${not empty requestScope.commentsList}">
 						<c:forEach var="c" items="${requestScope.commentsList}">
-							<li style="margin-left:${c.comment_indent}rem">
-								<span>${c.comment_id}</span>
+							<li class="commentList" style="margin-left:${c.comment_indent}rem">
 								<span>${c.useremail}</span>
 								<span class="comment-content">${c.comment_content}</span>
 								<span>
@@ -100,8 +99,6 @@
 								<c:if test="${sessionScope.loginUser.useremail == c.useremail}">
 									<span>
 										<button data-idx="${c.comment_id}" class="edit-btn">수정</button>
-									</span>
-									<span>
 										<button data-idx="${c.comment_id}" class="delete-btn">삭제</button>
 									</span>
 								</c:if>
