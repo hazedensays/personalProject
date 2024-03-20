@@ -31,7 +31,7 @@ public class CommentsServiceImpl implements CommentsService {
 	public PageResultDTO<Comments> selectList(PageRequestDTO requestDTO, int id){
 	   QueryResults<Comments> result = queryFactory
 	            .selectFrom(comments)
-	            .where(comments.comment_delyn.eq('N').and(comments.board_id.eq(id)))
+	            .where(comments.comment_delyn.eq('N').or(comments.comment_delyn.eq('O')).and(comments.board_id.eq(id)))
 	            .orderBy(comments.comment_root.asc(),comments.comment_steps.asc())
 	            .offset(requestDTO.getPageable().getOffset())
 	            .limit(requestDTO.getPageable().getPageSize())
@@ -55,7 +55,7 @@ public class CommentsServiceImpl implements CommentsService {
 	public List<Comments> selectListBasedOnBoard_id(int board_id) {
 	    QueryResults<Comments> result = queryFactory
 	            .selectFrom(comments)
-	            .where(comments.comment_delyn.eq('N').and(comments.board_id.eq(board_id)))
+	            .where(comments.comment_delyn.eq('N').or(comments.comment_delyn.eq('O')).and(comments.board_id.eq(board_id)))
 	            .fetchResults();
 	    
 	    return result.getResults();

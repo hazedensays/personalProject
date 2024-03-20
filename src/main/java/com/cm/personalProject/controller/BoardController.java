@@ -255,8 +255,9 @@ public class BoardController {
 		Comments entity = commentsService.selectDetail(commentId);
 
 		if (entity != null) {
+			entity.setComment_delyn('O');
 			entity.setComment_deldate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-			entity.setComment_delyn('Y');
+			//entity.setComment_content("해당 댓글은 삭제된 댓글 입니다.");
 			commentsService.save(entity);
 		}
 

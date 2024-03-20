@@ -83,7 +83,27 @@
 							<li style="margin-left:${c.comment_indent}rem">
 								<span>${c.useremail}</span>
 								<span>${c.comment_regdate}</span>
-								<div class="comment-content">${c.comment_content}</div>
+								
+<c:choose>
+    <c:when test="${not empty c.comment_deldate}">
+        <div class="comment-content">해당 댓글은 삭제된 댓글입니다.</div>
+    </c:when>
+<%--     <c:when test="${c.comment_delyn == N}">
+        <div class="comment-content">${c.comment_content}</div>
+    </c:when> --%>
+    <c:otherwise>
+        <div class="comment-content">${c.comment_content}</div>
+    </c:otherwise>
+</c:choose>
+
+
+<%-- <c:if test="${c.comment_delyn == O}">
+	<div class="comment-content">해당 댓글은 삭제된 댓글입니다.</div>
+</c:if>
+ --%>
+
+
+
 								<div>
 									<input type="text" class="edit-comment" style="display: none;" value="${c.comment_content}">
 								</div>
