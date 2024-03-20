@@ -1,5 +1,6 @@
 package com.cm.personalProject.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -48,6 +49,16 @@ public class CommentsServiceImpl implements CommentsService {
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public List<Comments> selectListBasedOnBoard_id(int board_id) {
+	    QueryResults<Comments> result = queryFactory
+	            .selectFrom(comments)
+	            .where(comments.comment_delyn.eq('N').and(comments.board_id.eq(board_id)))
+	            .fetchResults();
+	    
+	    return result.getResults();
 	}
 
 	@Override

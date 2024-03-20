@@ -12,6 +12,8 @@ public interface CommentsService {
 	
 	public Comments selectDetail(int comment_id);
 	
+	public List<Comments> selectListBasedOnBoard_id(int board_id);
+	
 	public int save(Comments entity);
 
 	public int delete(int comment_id);

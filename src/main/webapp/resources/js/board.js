@@ -1,3 +1,23 @@
+function axboardDelete(id) {
+	let url = "/board/boardDelete/" + id;
+
+	if (confirm("삭제하시겠습니까?")) {
+		axios.post(url
+		).then(response => {
+			alert("삭제되었습니다.");
+			window.location.href = "/board/boardPage";
+		}).catch(err => {
+			if (err.response && err.response.status === 502) {
+				alert("[삭제 오류]" + err.response.data);
+			} else {
+				alert("[시스템 오류]" + err.message);
+			}
+		});
+	} else {
+		alert("취소되었습니다.");
+	}
+}
+
 function toggleLike(board_id, useremail) {
         console.log(board_id, useremail);
         
@@ -60,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         axios.post(url, formData)
             .then(response => {
                 console.log('댓글이 성공적으로 업데이트되었습니다.');
+                window.location.reload();
             })
             .catch(error => {
                 console.error('댓글 업데이트에 실패했습니다:', error);
@@ -84,18 +105,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function deleteCommentOnServer(comment_id) {
-    let url = '/board/deleteComments?comment_id=' + comment_id;
+    if (confirm('댓글을 삭제하시겠습니까?')) {
+        let url = '/board/deleteComments?comment_id=' + comment_id;
 
-    axios.delete(url)
-        .then(response => {
-            console.log('댓글이 성공적으로 삭제되었습니다.');
-            // 삭제 성공 시 적절한 화면 갱신 로직 추가
-            alert('댓글이 삭제되었습니다.');
-            window.location.reload();
-        })
-        .catch(error => {
-            console.error('댓글 삭제에 실패했습니다:', error);
-        });
+        axios.delete(url)
+            .then(response => {
+                console.log('댓글이 성공적으로 삭제되었습니다.');
+                alert('댓글이 삭제되었습니다.');
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('댓글 삭제에 실패했습니다:', error);
+            });
+    } else {
+		alert("취소되었습니다.");
+	}
 }
 
 function toggleReply(comment_id) {

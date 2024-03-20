@@ -2,6 +2,7 @@ package com.cm.personalProject.controller;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -95,7 +96,7 @@ public class BoardController {
 
 		entity = boardService.selectDetail(entity.getBoard_id());
 
-		PageRequestDTO requestDTO = PageRequestDTO.builder().page(page).size(3).build();
+		PageRequestDTO requestDTO = PageRequestDTO.builder().page(page).size(5).build();
 		PageResultDTO<Comments> resultDTO = commentsService.selectList(requestDTO, entity.getBoard_id());
 
 		model.addAttribute("resultDTO", resultDTO);
@@ -139,12 +140,20 @@ public class BoardController {
 	@PostMapping("/boardDelete/{board_id}")
 	public ResponseEntity<?> boardDelete(@PathVariable("board_id") int id) {
 
-		Board entity = boardService.selectDetail(id);
+		Board boardEntity = boardService.selectDetail(id);
+		List<Comments> commentsEntity = commentsService.selectListBasedOnBoard_id(id);
 
-		if (entity != null) {
-			entity.setBoard_deldate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-			entity.setBoard_delyn('Y');
-			boardService.save(entity);
+		if (boardEntity != null) {
+			
+			for (Comments comment : commentsEntity) {
+			    comment.setComment_delyn('Y');
+			    comment.setComment_deldate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+			    commentsService.save(comment);
+			}
+			
+			boardEntity.setBoard_deldate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+			boardEntity.setBoard_delyn('Y');
+			boardService.save(boardEntity);
 		}
 
 		return ResponseEntity.ok().build();

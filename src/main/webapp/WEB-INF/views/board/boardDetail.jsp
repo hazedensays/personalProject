@@ -78,35 +78,30 @@
 
 			<div class="comments">
 				<ul>
-<!-- 					<li class="commentsTitle">
-						<span>작성자</span>
-						<span>댓글 내용</span>
-						<span>등록일</span>
-						<span>수정/삭제</span>
-						<span>reply</span>
-					</li> -->
-
 					<c:if test="${not empty requestScope.commentsList}">
 						<c:forEach var="c" items="${requestScope.commentsList}">
-							<li class="commentList" style="margin-left:${c.comment_indent}rem">
+							<li style="margin-left:${c.comment_indent}rem">
 								<span>${c.useremail}</span>
-								<span class="comment-content">${c.comment_content}</span>
-								<span>
-									<input type="text" class="edit-comment" style="display: none;" value="${c.comment_content}">
-								</span>
 								<span>${c.comment_regdate}</span>
+								<div class="comment-content">${c.comment_content}</div>
+								<div>
+									<input type="text" class="edit-comment" style="display: none;" value="${c.comment_content}">
+								</div>
 								
-								<c:if test="${sessionScope.loginUser.useremail == c.useremail}">
-									<span>
-										<button data-idx="${c.comment_id}" class="edit-btn">수정</button>
-										<button data-idx="${c.comment_id}" class="delete-btn">삭제</button>
-									</span>
-								</c:if>
+								<div>
+									<a id="reply-btn" onclick="toggleReply(${c.comment_id})">답글달기</a>
+									
+									<c:if test="${sessionScope.loginUser.useremail == c.useremail}">
+										<div>
+											<button data-idx="${c.comment_id}" class="edit-btn">수정</button>
+											<button data-idx="${c.comment_id}" class="delete-btn">삭제</button>
+										</div>
+									</c:if>
+								</div>
 								
-								<a id="reply-btn" onclick="toggleReply(${c.comment_id})">답글달기</a>
 							</li>
 
-							<li id="reply-${c.comment_id}" style="display: none;">
+							<li class="infiniteReply" id="reply-${c.comment_id}" style="display: none; margin-left:${c.comment_indent}rem;">
 								<form action="commentReply" method="post">
 									<span>${sessionScope.loginUser.useremail}</span>
 									<input type="hidden" id="board_id" name="board_id" value="${c.board_id}" />
@@ -115,7 +110,9 @@
 									<input type="hidden" id="comment_steps" name="comment_steps" value="${c.comment_steps}" />
 									<input type="hidden" id="comment_indent" name="comment_indent" value="${c.comment_indent}" />
 									<input type="text" id="comment_content" name="comment_content" placeholder="댓글을 입력해 주세요." maxlength="1000" required />
-									<button>등록</button>
+									<div>
+										<button>등록</button>
+									</div>
 								</form>
 							</li>
 						</c:forEach>
@@ -168,21 +165,25 @@
 		<hr />
 
 		<div class="nav_box">
-			<c:if test="${sessionScope.loginUser.useremail == requestScope.boardDetail.useremail}">
+			<div>
+				<c:if test="${sessionScope.loginUser.useremail == requestScope.boardDetail.useremail}">
+					<span>
+						<a class="m_button" href="boardDetail?jCode=U&board_id=${requestScope.boardDetail.board_id}">게시물 수정</a>
+					</span>
+					<span>
+						<button onclick="axboardDelete(${requestScope.boardDetail.board_id})" id="${requestScope.boardDetail.board_id}">게시물 삭제</button>
+					</span>
+				</c:if>
+				
 				<span>
-					<a class="m_button" href="boardDetail?jCode=U&board_id=${requestScope.boardDetail.board_id}">수정</a>
+					<a class="m_button" href="boardPage">게시판 목록</a>
 				</span>
-				<span>
-					<button onclick="axboardDelete(${requestScope.boardDetail.board_id})" id="${requestScope.boardDetail.board_id}">삭제</button>
-				</span>
-			</c:if>
+				<br/>
+			</div>
 			
-			<span>
-				<a class="m_button" href="boardPage">게시판 목록</a>
-			</span>
-			<span>
-				<a href="/home">Home</a>
-			</span>
+			<div>
+				<a href="/home">Go home</a>
+			</div>
 		</div>
 	</div>
 </body>
