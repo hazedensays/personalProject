@@ -84,25 +84,15 @@
 								<span>${c.useremail}</span>
 								<span>${c.comment_regdate}</span>
 								
-<c:choose>
-    <c:when test="${not empty c.comment_deldate}">
-        <div class="comment-content">해당 댓글은 삭제된 댓글입니다.</div>
-    </c:when>
-<%--     <c:when test="${c.comment_delyn == N}">
-        <div class="comment-content">${c.comment_content}</div>
-    </c:when> --%>
-    <c:otherwise>
-        <div class="comment-content">${c.comment_content}</div>
-    </c:otherwise>
-</c:choose>
-
-
-<%-- <c:if test="${c.comment_delyn == O}">
-	<div class="comment-content">해당 댓글은 삭제된 댓글입니다.</div>
-</c:if>
- --%>
-
-
+								<c:choose>
+								    <c:when test="${not empty c.comment_deldate}">
+								        <div class="comment-content">해당 댓글은 삭제된 댓글입니다.</div>
+								    </c:when>
+								
+								    <c:otherwise>
+								        <div class="comment-content">${c.comment_content}</div>
+								    </c:otherwise>
+								</c:choose>
 
 								<div>
 									<input type="text" class="edit-comment" style="display: none;" value="${c.comment_content}">
@@ -111,7 +101,7 @@
 								<div>
 									<a id="reply-btn" onclick="toggleReply(${c.comment_id})">답글달기</a>
 									
-									<c:if test="${sessionScope.loginUser.useremail == c.useremail}">
+									<c:if test="${sessionScope.loginUser.useremail == c.useremail && empty c.comment_deldate}">
 										<div>
 											<button data-idx="${c.comment_id}" class="edit-btn">수정</button>
 											<button data-idx="${c.comment_id}" class="delete-btn">삭제</button>
