@@ -53,6 +53,12 @@
 						</tr>
 					</c:forEach>
 				</c:if>
+				
+				<c:if test="${empty requestScope.selectList}">
+						<tr>
+							<td colspan="7">작성된 게시글이 없습니다.</td>
+						</tr>
+				</c:if>
 			</table>
 
 			<div class="pageNation">
