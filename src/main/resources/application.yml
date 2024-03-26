@@ -17,13 +17,12 @@ spring:
   application:
     name: personalProject
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
       properties:
         hibernate:
           format_sql: true
-#          dialect: org.hibernate.dialect.MySQLDialect
+          dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
   mvc:
     view:
