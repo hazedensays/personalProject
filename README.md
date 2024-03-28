@@ -48,4 +48,5 @@
 
 
 ## 🥸 회고
-블로그 주소(https://sweetychocoding.tistory.com)
+블로그 주소 => https://sweetychocoding.tistory.com
+기능 설명 및 시연 => https://hazedensays.github.io/portfolio/
